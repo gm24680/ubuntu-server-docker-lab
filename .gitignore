@@ -1,0 +1,18 @@
+# Backups and archives
+*.tar
+*.tar.gz
+*.zip
+
+# Secrets and environment variables
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Temporary files
+*.log
+*.tmp
+*~
+.DS_Store
+

@@ -3,7 +3,8 @@
 set -euo pipefail
 
 VOLUME="${1:-docker-storage-compose_website_data}"
-BACKUP_DIR="${HOME}/docker-backups"
+BACKUP_DIR="${BACKUP_DIR:-${SUDO_USER:+$(getent passwd "$SUDO_USER" | cut -d: -f6)/docker-backups}}"
+BACKUP_DIR="${BACKUP_DIR:-${HOME}/docker-backups}"
 
 mkdir -p "$BACKUP_DIR"
 

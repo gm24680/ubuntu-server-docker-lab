@@ -78,10 +78,14 @@ Performed a recovery exercise:
 ubuntu-server-docker-lab/
 ├── docker-web/
 │   ├── Dockerfile
-│   ├── index.html
-│   └── compose.yaml
+│   ├── compose.yaml
+│   └── index.html
 ├── storage-compose/
 │   └── compose.yaml
+├── scripts/
+│   ├── backup-volume.sh
+│   └── restore-volume.sh
+├── .gitignore
 └── README.md
 ```
 
@@ -111,7 +115,53 @@ docker compose up -d
 ```
 
 The storage example uses port 8085 and a named volume to preserve website files across container recreation.
+## Docker Volume Backup and Recovery
 
+The lab includes Bash scripts for backing up and restoring Docker named volumes.
+
+### Create a Backup
+
+```bash
+sudo bash scripts/backup-volume.sh
+```
+
+The script:
+
+- Checks whether the Docker volume exists.
+- Creates a timestamped compressed archive.
+- Stores backups in the user's `docker-backups` directory.
+- Verifies archive integrity using `gzip -t`.
+
+The default volume is `docker-storage-compose_website_data`.
+
+### Restore a Backup
+
+```bash
+sudo bash scripts/restore-volume.sh \
+  /path/to/backup.tar.gz \
+  recovered-website-data
+```
+
+The restore script:
+
+- Validates the backup file and destination volume name.
+- Prevents overwriting an existing Docker volume.
+- Creates a new volume for recovery.
+- Restores the archived files using a temporary Alpine container.
+
+### Verification
+
+On November 5, 2026, the following checks were completed:
+
+- Confirmed that four containerized HTTP endpoints responded successfully.
+- Verified persistent content through port 8085.
+- Checked that two existing backup archives were readable.
+- Validated Bash script syntax.
+- Validated both Docker Compose configurations.
+
+The lab also included a previous volume restoration test.
+
+These checks demonstrate backup verification and recovery procedures. They do not replace ongoing automated restore testing.
 ## Skills Demonstrated
 
 Linux administration, SSH, firewalls, web servers, shell scripting, system monitoring, containerization, networking, deployment, rollback, persistent storage, backup verification, and recovery testing.
